@@ -28,7 +28,7 @@
 ###
 
 """
-Provides basic functionality for handling RSS/RDF feeds.
+Gets LHC comments from the LHCb logbook
 """
 
 import supybot
