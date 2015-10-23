@@ -30,54 +30,15 @@
 
 from supybot.test import *
 
-url = 'http://www.advogato.org/rss/articles.xml'
-class RSSTestCase(ChannelPluginTestCase):
-    plugins = ('RSS','Plugin')
-    def testRssAddBadName(self):
-        self.assertError('rss add "foo bar" %s' % url)
-
-    def testCantAddFeedNamedRss(self):
-        self.assertError('rss add rss %s' % url)
-
-    def testCantRemoveMethodThatIsntFeed(self):
-        self.assertError('rss remove rss')
-
+class LHCTestCase(ChannelPluginTestCase):
+    plugins = ('LHC','Plugin')
     if network:
-        def testRssinfo(self):
-            self.assertNotError('rss info %s' % url)
-            self.assertNotError('rss add advogato %s' % url)
-            self.assertNotError('rss info advogato')
-            self.assertNotError('rss info AdVogATo')
-            self.assertNotError('rss remove advogato')
-
-        def testRssinfoDoesTimeProperly(self):
-            self.assertNotRegexp('rss info http://slashdot.org/slashdot.rss',
-                                 '-1 years')
-
         def testAnnounce(self):
-            self.assertNotError('rss add advogato %s' % url)
-            self.assertNotError('rss announce add advogato')
-            self.assertNotRegexp('rss announce', r'ValueError')
-            self.assertNotError('rss announce remove advogato')
-            self.assertNotError('rss remove advogato')
+            self.assertNotError('lhc announce add')
+            self.assertNotError('lhc announce remove')
+            self.assertNotError('lhc announce list')
 
-        def testRss(self):
-            self.assertNotError('rss %s' % url)
-            m = self.assertNotError('rss %s 2' % url)
-            self.failUnless(m.args[1].count('||') == 1)
-
-        def testRssAdd(self):
-            self.assertNotError('rss add advogato %s' % url)
-            self.assertNotError('advogato')
-            self.assertNotError('rss advogato')
-            self.assertNotError('rss remove advogato')
-            self.assertNotRegexp('list RSS', 'advogato')
-            self.assertError('advogato')
-            self.assertError('rss advogato')
-
-        def testNonAsciiFeeds(self):
-            self.assertNotError('rss http://www.heise.de/newsticker/heise.rdf')
-            self.assertNotError('rss info http://br-linux.org/main/index.xml')
-
+        def testLast(self):
+            self.assertNotError('lhc last')
 
 # vim:set shiftwidth=4 softtabstop=4 expandtab textwidth=79:
