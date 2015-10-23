@@ -7,8 +7,14 @@ installed:
 Basic usage
 -----------
 
-Add announcements for a feed
-@LHC announce add URL
+Add announcements for the feed
+@LHC announce add
 
-Stop announcements for a feed
-@LHC announce remove URL
+Stop announcements for the feed
+@LHC announce remove
+
+Get info about active feed
+@LHC announce list
+
+Get the last item 
+@LHC last
