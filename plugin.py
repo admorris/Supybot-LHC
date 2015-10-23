@@ -137,7 +137,7 @@ class LHC(callbacks.Plugin):
             title = headline[0]
             if self.registryValue('bold', channel):
                 title = ircutils.bold(headline[0])
-            newheadlines.append(format('%s: %s %s',
+            newheadlines.append(format('%s: [%s] %s',
                                        title,
                                        headline[1],
                                        headline[2]))
@@ -268,9 +268,10 @@ class LHC(callbacks.Plugin):
         for d in feed['items']:
             title = conv(d['title'])
             if 'LHC, Comments' in title or 'LHC, New State' in title:
-#                thetime = time.strptime(conv(d['pubDate']),"%a, %d %b %Y %H:%M:%S +0002")
-#                timestamp = time.strftime("%H:%M",thetime)
-                timestamp = 'now'
+                thetime = conv(d['published'])
+                thetime = time.strptime(thetime,"%a, %d %b %Y %H:%M:%S +0200")
+                timestamp = time.strftime("%H:%M",thetime)
+#                timestamp = 'now'
                 description = conv(d['description'])
                 headlines.append((title, timestamp, description))
         return headlines
@@ -288,11 +289,9 @@ class LHC(callbacks.Plugin):
         list = wrap(list, ['channel',])
 
         def add(self, irc, msg, args, channel):
-            """[<channel>] <name|url> [<name|url> ...]
+            """[<channel>]
 
-            Adds the list of feeds to the current list of announced feeds in
-            <channel>.  Valid feeds include the names of registered feeds as
-            well as URLs for RSS feeds.  <channel> is only necessary if the
+            Adds the feed. <channel> is only necessary if the
             message isn't sent in the channel itself.
             """
             announce = conf.supybot.plugins.LHC.announce
@@ -303,11 +302,9 @@ class LHC(callbacks.Plugin):
         add = wrap(add, [('checkChannelCapability', 'op')])
 
         def remove(self, irc, msg, args, channel):
-            """[<channel>] <name|url> [<name|url> ...]
+            """[<channel>]
 
-            Removes the list of feeds from the current list of announced feeds
-            in <channel>.  Valid feeds include the names of registered feeds as
-            well as URLs for RSS feeds.  <channel> is only necessary if the
+            Removes the feed. <channel> is only necessary if the
             message isn't sent in the channel itself.
             """
             announce = conf.supybot.plugins.LHC.announce
