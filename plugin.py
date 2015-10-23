@@ -134,10 +134,11 @@ class LHC(callbacks.Plugin):
     def buildHeadlines(self, headlines, channel):
         newheadlines = []
         for headline in headlines:
+            title = headline[0]
             if self.registryValue('bold', channel):
-                headline[0] = ircutils.bold(headline[0])
+                title = ircutils.bold(headline[0])
             newheadlines.append(format('%s: %s %s',
-                                       headline[0],
+                                       title,
                                        headline[1],
                                        headline[2]))
         return newheadlines
@@ -266,9 +267,10 @@ class LHC(callbacks.Plugin):
         conv = self._getConverter(feed)
         for d in feed['items']:
             title = conv(d['title'])
-            if title is 'LHC, Comments' or title is 'LHC, New State':
-                thetime = time.strptime(conv(d['pubDate']),"%a, %d %b %Y %H:%M:%S +0002")
-                timestamp = time.strftime("%H:%M",thetime)
+            if 'LHC, Comments' in title or 'LHC, New State' in title:
+#                thetime = time.strptime(conv(d['pubDate']),"%a, %d %b %Y %H:%M:%S +0002")
+#                timestamp = time.strftime("%H:%M",thetime)
+                timestamp = 'now'
                 description = conv(d['description'])
                 headlines.append((title, timestamp, description))
         return headlines
@@ -314,6 +316,30 @@ class LHC(callbacks.Plugin):
             announce.get(channel).setValue(S)
             irc.replySuccess()
         remove = wrap(remove, [('checkChannelCapability', 'op')])
+
+    def last(self, irc, msg, args):
+        """
+
+        Gets the last comment or machine status
+        """
+        url = 'http://lblogbook.cern.ch/Shift/elog.rdf'
+        self.log.debug('Fetching %u', url)
+        feed = self.getFeed(url)
+        if irc.isChannel(msg.args[0]):
+            channel = msg.args[0]
+        else:
+            channel = None
+        headlines = self.getHeadlines(feed)
+        if not headlines:
+            irc.error('Couldn\'t get RSS feed.')
+            return
+        headlines = self.buildHeadlines(headlines, channel)
+        headlines = headlines[:1]
+        sep = self.registryValue('headlineSeparator', channel)
+        if self.registryValue('bold', channel):
+            sep = ircutils.bold(sep)
+        irc.replies(headlines, joiner=sep)
+    last = wrap(last)
 
 Class = LHC
 
