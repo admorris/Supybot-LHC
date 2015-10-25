@@ -269,9 +269,12 @@ class LHC(callbacks.Plugin):
             title = conv(d['title'])
             if 'LHC, Comments' in title or 'LHC, New State' in title:
                 thetime = conv(d['published'])
-                thetime = time.strptime(thetime,"%a, %d %b %Y %H:%M:%S +0200")
+                # Dumb way to deal with daylight savings due to no implementation of %z in time.strptime
+                try:
+                    thetime = time.strptime(thetime,"%a, %d %b %Y %H:%M:%S +0100")
+                except ValueError:
+                    thetime = time.strptime(thetime,"%a, %d %b %Y %H:%M:%S +0200")
                 timestamp = time.strftime("%H:%M",thetime)
-#                timestamp = 'now'
                 description = conv(d['description'])
                 headlines.append((title, timestamp, description))
         return headlines
