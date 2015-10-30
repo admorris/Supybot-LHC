@@ -34,6 +34,7 @@ import socket
 import sgmllib
 import threading
 import feedparser
+import random
 
 import supybot.conf as conf
 import supybot.utils as utils
@@ -278,7 +279,15 @@ class LHC(callbacks.Plugin):
                 description = conv(d['description'])
                 headlines.append((title, timestamp, description))
         return headlines
-
+        
+    ## this should, with a small probability, remind us of the days when
+    ##  this task was instead done (sometimes poorly) by OCR
+    def funkify_title_probably(title):
+        if 'LHC, Comments' in title and random.random() < 0.1 
+            return 'LHC, Corn ments:'
+        else
+            return title
+            
     class announce(callbacks.Commands):
         def list(self, irc, msg, args, channel):
             """[<channel>]
