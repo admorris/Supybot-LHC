@@ -284,9 +284,9 @@ class LHC(callbacks.Plugin):
     ##  this task was instead done (sometimes poorly) by OCR
     ##  which replaced Comments: with Corn ments:
     def funkify_title_probably(title):
-        if 'LHC, Comments' in title and random.random() < 0.1 
+        if 'LHC, Comments' in title and random.random() < 0.1:
             return 'LHC, Corn ments'
-        else
+        else:
             return title
             
     class announce(callbacks.Commands):
