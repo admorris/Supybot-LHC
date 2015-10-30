@@ -277,14 +277,15 @@ class LHC(callbacks.Plugin):
                     thetime = time.strptime(thetime,"%a, %d %b %Y %H:%M:%S +0200")
                 timestamp = time.strftime("%H:%M",thetime)
                 description = conv(d['description'])
-                headlines.append((title, timestamp, description))
+                headlines.append((funkify_title_probably(title), timestamp, description))
         return headlines
         
     ## this should, with a small probability, remind us of the days when
     ##  this task was instead done (sometimes poorly) by OCR
+    ##  which replaced Comments: with Corn ments:
     def funkify_title_probably(title):
         if 'LHC, Comments' in title and random.random() < 0.1 
-            return 'LHC, Corn ments:'
+            return 'LHC, Corn ments'
         else
             return title
             
