@@ -279,7 +279,7 @@ class LHC(callbacks.Plugin):
                 description = conv(d['description'])
                 headlines.append((funkify_title_probably(title), timestamp, description))
         return headlines
-        
+
     ## this should, with a small probability, remind us of the days when
     ##  this task was instead done (sometimes poorly) by OCR
     ##  which replaced Comments: with Corn ments:
@@ -288,7 +288,7 @@ class LHC(callbacks.Plugin):
             return 'LHC, Corn ments'
         else:
             return title
-            
+
     class announce(callbacks.Commands):
         def list(self, irc, msg, args, channel):
             """[<channel>]
