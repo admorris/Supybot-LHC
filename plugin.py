@@ -282,10 +282,13 @@ class LHC(callbacks.Plugin):
 
     ## this should, with a small probability, remind us of the days when
     ##  this task was instead done (sometimes poorly) by OCR
-    ##  which replaced Comments: with Corn ments:
+    ##  which replaced Comments: with Cornments:
     def funkify_title_probably(self, title):
-        if 'LHC, Comments' in title and random.random() < 0.1:
-            return 'LHC, Corn ments'
+        if 'LHC, Comments' in title:
+            if random.random() < 0.1:
+                return 'LHC, Cornments'
+            elif random.random > 0.99:
+                return 'LHC, Condiments'
         else:
             return title
 
