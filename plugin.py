@@ -139,7 +139,7 @@ class LHC(callbacks.Plugin):
             if self.registryValue('bold', channel):
                 title = ircutils.bold(headline[0])
             newheadlines.append(format('%s: [%s] %s',
-                                       title,
+                                       self.funkify_title_probably(title),
                                        headline[1],
                                        headline[2]))
         return newheadlines
@@ -277,7 +277,7 @@ class LHC(callbacks.Plugin):
                     thetime = time.strptime(thetime,"%a, %d %b %Y %H:%M:%S +0200")
                 timestamp = time.strftime("%H:%M",thetime)
                 description = conv(d['description'])
-                headlines.append((self.funkify_title_probably(title), timestamp, description))
+                headlines.append((title, timestamp, description))
         return headlines
 
     ## this should, with a small probability, remind us of the days when
