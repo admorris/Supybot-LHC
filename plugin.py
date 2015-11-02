@@ -135,11 +135,11 @@ class LHC(callbacks.Plugin):
     def buildHeadlines(self, headlines, channel):
         newheadlines = []
         for headline in headlines:
-            title = headline[0]
+            title = self.funkify_title_probably(headline[0])
             if self.registryValue('bold', channel):
-                title = ircutils.bold(headline[0])
+                title = ircutils.bold(title)
             newheadlines.append(format('%s: [%s] %s',
-                                       self.funkify_title_probably(title),
+                                       title,
                                        headline[1],
                                        headline[2]))
         return newheadlines
