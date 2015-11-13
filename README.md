@@ -2,6 +2,7 @@
 Put the folder LHC/ inside Supybot's plugins/ directory.
 e.g.
 `$ git clone git@github.com:Supybot/Supybot.git`
+
 `$ git clone git@github.com:abmorris/Supybot-LHC.git Supybot/plugins/LHC`
 
 The commands are:
