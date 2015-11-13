@@ -135,7 +135,7 @@ class LHC(callbacks.Plugin):
     def buildHeadlines(self, headlines, channel):
         newheadlines = []
         for headline in headlines:
-            title = self.funkify_title_probably(headline[0])
+            title = self.formatTitle(headline[0])
             if self.registryValue('bold', channel):
                 title = ircutils.bold(title)
             newheadlines.append(format('%s: [%s] %s',
@@ -283,12 +283,17 @@ class LHC(callbacks.Plugin):
     ## this should, with a small probability, remind us of the days when
     ##  this task was instead done (sometimes poorly) by OCR
     ##  which replaced Comments: with Cornments:
-    def funkify_title_probably(self, title):
-        if 'LHC, Comments' in title and random.random() < 0.1:
-            if random.random() < 0.01:
-                return 'LHC, Condiments'
+    def formatTitle(self, title):
+        roll = random.random()
+        if 'LHC, Comments' in title:
+            if roll < 0.01:
+                return 'LHC condiment'
+            elif roll < 0.1:
+                return 'LHC cornment'
             else:
-                return 'LHC, Cornments'
+                return 'LHC comment'
+        elif 'LHC, New State' in title:
+            return 'LHC state'
         else:
             return title
 
