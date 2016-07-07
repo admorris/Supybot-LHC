@@ -74,7 +74,7 @@ class LHC(callbacks.Plugin):
                 self.log.warning('%s is not a registered feed, removing.',name)
                 continue
             self.makeFeedCommand(name, url)
-            self.getFeed('http://lblogbook.cern.ch/Shift/elog.rdf') # So announced feeds don't announce on startup.
+            self.getFeed('http://alicedcs.web.cern.ch/AliceDCS/monitoring/screenshots/rss.xml') # So announced feeds don't announce on startup.
 
     def isCommandMethod(self, name):
         if not self.__parent.isCommandMethod(name):
@@ -135,7 +135,7 @@ class LHC(callbacks.Plugin):
     def buildHeadlines(self, headlines, channel):
         newheadlines = []
         for headline in headlines:
-            title = self.formatTitle(headline[0])
+            title = headline[0]
             if self.registryValue('bold', channel):
                 title = ircutils.bold(title)
             newheadlines.append(format('%s: [%s] %s',
@@ -267,35 +267,14 @@ class LHC(callbacks.Plugin):
         headlines = []
         conv = self._getConverter(feed)
         for d in feed['items']:
-            title = conv(d['title'])
-            if 'LHC, Comments' in title or 'LHC, New State' in title:
-                thetime = conv(d['published'])
-                # Dumb way to deal with daylight savings due to no implementation of %z in time.strptime
-                try:
-                    thetime = time.strptime(thetime,"%a, %d %b %Y %H:%M:%S +0100")
-                except ValueError:
-                    thetime = time.strptime(thetime,"%a, %d %b %Y %H:%M:%S +0200")
-                timestamp = time.strftime("%H:%M",thetime)
-                description = conv(d['description'])
-                headlines.append((title, timestamp, description))
+            headline = conv(d['title'])
+            splitpos = headline.find(':')
+            if 'LhcPage1' in headline:
+                comment = headline[splitpos+2:]
+            if 'LhcBeamMode' in headline:
+                mode = headline[splitpos+2:]
+        headlines.append(("LHC comment", mode, comment))
         return headlines
-
-    ## this should, with a small probability, remind us of the days when
-    ##  this task was instead done (sometimes poorly) by OCR
-    ##  which replaced Comments: with Cornments:
-    def formatTitle(self, title):
-        roll = random.random()
-        if 'LHC, Comments' in title:
-            if roll < 0.01:
-                return 'LHC condiment'
-            elif roll < 0.1:
-                return 'LHC cornment'
-            else:
-                return 'LHC comment'
-        elif 'LHC, New State' in title:
-            return 'LHC state'
-        else:
-            return title
 
     class announce(callbacks.Commands):
         def list(self, irc, msg, args, channel):
@@ -317,7 +296,7 @@ class LHC(callbacks.Plugin):
             """
             announce = conf.supybot.plugins.LHC.announce
             S = announce.get(channel)()
-            S.add('http://lblogbook.cern.ch/Shift/elog.rdf')
+            S.add('http://alicedcs.web.cern.ch/AliceDCS/monitoring/screenshots/rss.xml')
             announce.get(channel).setValue(S)
             irc.replySuccess()
         add = wrap(add, [('checkChannelCapability', 'op')])
@@ -330,7 +309,7 @@ class LHC(callbacks.Plugin):
             """
             announce = conf.supybot.plugins.LHC.announce
             S = announce.get(channel)()
-            S.discard('http://lblogbook.cern.ch/Shift/elog.rdf')
+            S.discard('http://alicedcs.web.cern.ch/AliceDCS/monitoring/screenshots/rss.xml')
             announce.get(channel).setValue(S)
             irc.replySuccess()
         remove = wrap(remove, [('checkChannelCapability', 'op')])
@@ -340,7 +319,7 @@ class LHC(callbacks.Plugin):
 
         Gets the last comment or machine status
         """
-        url = 'http://lblogbook.cern.ch/Shift/elog.rdf'
+        url = 'http://alicedcs.web.cern.ch/AliceDCS/monitoring/screenshots/rss.xml'
         self.log.debug('Fetching %u', url)
         feed = self.getFeed(url)
         if irc.isChannel(msg.args[0]):
