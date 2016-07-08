@@ -138,10 +138,9 @@ class LHC(callbacks.Plugin):
             title = headline[0]
             if self.registryValue('bold', channel):
                 title = ircutils.bold(title)
-            newheadlines.append(format('%s: [%s] %s',
+            newheadlines.append(format('%s: %s',
                                        title,
-                                       headline[1],
-                                       headline[2]))
+                                       headline[1]))
         return newheadlines
 
     def _newHeadlines(self, irc, channels, name, url):
@@ -180,7 +179,7 @@ class LHC(callbacks.Plugin):
                     if bold:
                         sep = ircutils.bold(sep)
                     headlines = self.buildHeadlines(newheadlines, channel)
-                    self.log.info('Sending message to', channel)
+                    self.log.info('Sending message to %s', channel)
                     irc.replies(headlines, prefixer='', joiner=sep,
                                 to=channel, prefixNick=False, private=True)
         finally:
@@ -274,7 +273,7 @@ class LHC(callbacks.Plugin):
                 comment = headline[splitpos+2:]
             if 'LhcBeamMode' in headline:
                 mode = headline[splitpos+2:]
-        headlines.append(("LHC comment", mode, comment))
+        headlines.append(("LHC comment", "["+mode+"] "+comment))
         return headlines
 
     class announce(callbacks.Commands):
