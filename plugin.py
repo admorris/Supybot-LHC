@@ -180,6 +180,8 @@ class LHC(callbacks.Plugin):
                         sep = ircutils.bold(sep)
                     headlines = self.buildHeadlines(newheadlines, channel)
                     self.log.info('Sending message to %s', channel)
+                    setattr(irc, "to", None)
+                    setattr(irc, "private", None)
                     irc.replies(headlines, prefixer='', joiner=sep,
                                 to=channel, prefixNick=False, private=True)
         finally:
